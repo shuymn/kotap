@@ -12,10 +12,12 @@
     "plugin:prettier/recommended",
     "prettier/@typescript-eslint"
   ],
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "simple-import-sort"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module"
   },
-  "rules": {}
+  "rules": {
+    "simple-import-sort/sort": "error"
+  }
 }
