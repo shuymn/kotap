@@ -1,10 +1,10 @@
+import * as fs from 'fs';
+import os from 'os';
+import path from 'path';
 import * as IO from 'fp-ts/lib/IO';
 import * as IOE from 'fp-ts/lib/IOEither';
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
-import * as fs from 'fs';
-import os from 'os';
-import path from 'path';
 import stripBom from 'strip-bom';
 
 import { ENV, ERROR, PROJECT_NAME } from './constants';
