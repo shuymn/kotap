@@ -4,7 +4,7 @@ import * as IOE from 'fp-ts/lib/IOEither';
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as TE from 'fp-ts/lib/TaskEither';
-import isOnline from 'is-online';
+import isOnline = require('is-online');
 
 import { ERROR } from './constants';
 import { spinWith } from './spinner';
