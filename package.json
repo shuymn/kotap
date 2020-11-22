@@ -37,7 +37,7 @@
     "cli-spinner": "^0.2.10",
     "commander": "^5.1.0",
     "fp-ts": "^2.8.6",
-    "is-online": "^8.3.1",
+    "is-online": "^8.5.1",
     "luxon": "^1.24.1",
     "puppeteer": "^3.2.0",
     "strip-bom": "^4.0.0"
