@@ -14,7 +14,7 @@
     "test": "npm run build-local && jest"
   },
   "engines": {
-    "node": "12.20.0"
+    "node": "12.20.1"
   },
   "bin": {
     "kotap": "./src/index.js"
