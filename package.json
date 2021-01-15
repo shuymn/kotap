@@ -47,7 +47,7 @@
     "@commitlint/config-conventional": "11.0.0",
     "@types/cli-spinner": "0.2.0",
     "@types/jest": "26.0.20",
-    "@types/luxon": "1.25.0",
+    "@types/luxon": "1.25.1",
     "@types/node": "14.14.20",
     "@types/puppeteer": "5.4.2",
     "@types/rewire": "2.5.28",
