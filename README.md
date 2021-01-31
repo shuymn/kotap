@@ -54,7 +54,7 @@ Example `credentials.json`
 
 ```json
 {
-  "type": "s2", // only supports "s2" or "s3"
+  "type": "s2",
   "id": "example_id",
   "password": "example_password"
 }
