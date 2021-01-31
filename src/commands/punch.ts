@@ -189,9 +189,9 @@ const inputTimestamp = (hhmm: string): RTE.ReaderTaskEither<Page, Error, void> =
   TE.tryCatch(
     async () => {
       await page.type(SELECTOR.INPUT_RECORDING_TIMESTAMP, hhmm, { delay: 200 });
-      await page.waitFor(200);
+      await page.waitForTimeout(200);
       await page.$eval(SELECTOR.INPUT_RECORDING_TIMESTAMP, (element) => (element as HTMLInputElement).blur());
-      await page.waitFor(200);
+      await page.waitForTimeout(200);
 
       await Promise.all([
         page.waitForXPath(XPATH.RECORDING_TIMESTAMP_HOUR(hhmm.substr(0, 2))),
