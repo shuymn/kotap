@@ -38,7 +38,7 @@
     "commander": "^7.0.0",
     "fp-ts": "^2.9.5",
     "is-online": "^9.0.0",
-    "luxon": "^1.25.0",
+    "luxon": "^1.26.0",
     "puppeteer": "^5.5.0",
     "strip-bom": "^4.0.0"
   },
