@@ -39,7 +39,7 @@
     "fp-ts": "^2.10.4",
     "is-online": "^9.0.0",
     "luxon": "^1.26.0",
-    "puppeteer": "^5.5.0",
+    "puppeteer": "^9.1.1",
     "strip-bom": "^5.0.0"
   },
   "devDependencies": {
