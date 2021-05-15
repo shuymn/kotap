@@ -19,11 +19,6 @@
   "bin": {
     "kotap": "./src/index.js"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/shuymn/kotap"
@@ -43,8 +38,6 @@
     "strip-bom": "^5.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "12.1.4",
-    "@commitlint/config-conventional": "12.1.4",
     "@types/cli-spinner": "0.2.0",
     "@types/jest": "26.0.23",
     "@types/luxon": "1.26.5",
@@ -57,7 +50,6 @@
     "eslint-config-prettier": "7.2.0",
     "eslint-plugin-import": "2.23.0",
     "eslint-plugin-prettier": "3.4.0",
-    "husky": "6.0.0",
     "jest": "26.6.3",
     "prettier": "2.3.0",
     "rewire": "5.0.0",
