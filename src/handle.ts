@@ -24,5 +24,7 @@ const onRight = (): T.Task<void> =>
     T.fromIO
   );
 
-export const handle = <T>(command: Command<T>): ((arg: T) => void) => (arg: T): Promise<void> =>
-  pipe(arg, command, TE.fold(onLeft, onRight))();
+export const handle =
+  <T>(command: Command<T>): ((arg: T) => void) =>
+  (arg: T): Promise<void> =>
+    pipe(arg, command, TE.fold(onLeft, onRight))();

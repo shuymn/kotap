@@ -102,40 +102,42 @@ export const punch: Command<CommandOptions> = (options) =>
     TE.chain((func) => browse(func))
   );
 
-const gotoRequestPage = (yyyymmdd: string): RTE.ReaderTaskEither<Page, Error, Page> => (page: Page) =>
-  pipe(
-    teprint('going to the request page'),
-    TE.chain(() =>
-      TE.tryCatch(
-        async () => {
-          const xpath = XPATH.PARENT_OF_WORKING_DATE_INPUT(yyyymmdd);
-          const node = await page.waitForXPath(xpath);
-          const submit: ElementHandle<HTMLInputElement> | null = await node.$(SELECTOR.INPUT_TYPE_SUBMIT);
-          if (submit === null) {
-            throw new Error();
-          }
-          await submit.evaluate((element) => element.click());
-        },
-        () => new Error(ERROR.GO_TO_REQUEST_PAGE)
-      )
-    ),
-    TE.chain<Error, unknown, void>(() => teprint('loading the request page')),
-    TE.chain(() =>
-      TE.tryCatch(
-        () =>
-          Promise.all(
-            [
-              SELECTOR.INPUT_RECORDING_TIMESTAMP,
-              SELECTOR.INPUT_REQUEST_MESSAGE,
-              SELECTOR.SELECT_RECORDING_TYPE,
-              SELECTOR.BUTTON_REQUEST,
-            ].map((selector) => page.waitForSelector(selector))
-          ),
-        () => new Error(ERROR.LOAD_REQUEST_PAGE)
-      )
-    ),
-    TE.chain(() => TE.taskEither.of(page))
-  );
+const gotoRequestPage =
+  (yyyymmdd: string): RTE.ReaderTaskEither<Page, Error, Page> =>
+  (page: Page) =>
+    pipe(
+      teprint('going to the request page'),
+      TE.chain(() =>
+        TE.tryCatch(
+          async () => {
+            const xpath = XPATH.PARENT_OF_WORKING_DATE_INPUT(yyyymmdd);
+            const node = await page.waitForXPath(xpath);
+            const submit: ElementHandle<HTMLInputElement> | null = await node.$(SELECTOR.INPUT_TYPE_SUBMIT);
+            if (submit === null) {
+              throw new Error();
+            }
+            await submit.evaluate((element) => element.click());
+          },
+          () => new Error(ERROR.GO_TO_REQUEST_PAGE)
+        )
+      ),
+      TE.chain<Error, unknown, void>(() => teprint('loading the request page')),
+      TE.chain(() =>
+        TE.tryCatch(
+          () =>
+            Promise.all(
+              [
+                SELECTOR.INPUT_RECORDING_TIMESTAMP,
+                SELECTOR.INPUT_REQUEST_MESSAGE,
+                SELECTOR.SELECT_RECORDING_TYPE,
+                SELECTOR.BUTTON_REQUEST,
+              ].map((selector) => page.waitForSelector(selector))
+            ),
+          () => new Error(ERROR.LOAD_REQUEST_PAGE)
+        )
+      ),
+      TE.chain(() => TE.taskEither.of(page))
+    );
 
 const RecordingType = {
   In: '1',
@@ -185,56 +187,60 @@ const checkPunchedOut = async (page: Page): Promise<boolean> => {
   return handles.flat().length > 0;
 };
 
-const inputTimestamp = (hhmm: string): RTE.ReaderTaskEither<Page, Error, void> => (page: Page) =>
-  TE.tryCatch(
-    async () => {
-      await page.type(SELECTOR.INPUT_RECORDING_TIMESTAMP, hhmm, { delay: 200 });
-      await page.waitForTimeout(200);
-      await page.$eval(SELECTOR.INPUT_RECORDING_TIMESTAMP, (element) => (element as HTMLInputElement).blur());
-      await page.waitForTimeout(200);
+const inputTimestamp =
+  (hhmm: string): RTE.ReaderTaskEither<Page, Error, void> =>
+  (page: Page) =>
+    TE.tryCatch(
+      async () => {
+        await page.type(SELECTOR.INPUT_RECORDING_TIMESTAMP, hhmm, { delay: 200 });
+        await page.waitForTimeout(200);
+        await page.$eval(SELECTOR.INPUT_RECORDING_TIMESTAMP, (element) =>
+          (element as HTMLInputElement).blur()
+        );
+        await page.waitForTimeout(200);
 
-      await Promise.all([
-        page.waitForXPath(XPATH.RECORDING_TIMESTAMP_HOUR(hhmm.substr(0, 2))),
-        page.waitForXPath(XPATH.RECORDING_TIMESTAMP_MINUTE(hhmm.substr(2, 2))),
-      ]);
-    },
-    () => new Error(ERROR.INPUT_RECORDING_TIMESTAMP)
-  );
+        await Promise.all([
+          page.waitForXPath(XPATH.RECORDING_TIMESTAMP_HOUR(hhmm.substr(0, 2))),
+          page.waitForXPath(XPATH.RECORDING_TIMESTAMP_MINUTE(hhmm.substr(2, 2))),
+        ]);
+      },
+      () => new Error(ERROR.INPUT_RECORDING_TIMESTAMP)
+    );
 
-const requestRecording = (hhmm: string, message: string): RTE.ReaderTaskEither<Page, Error, void> => (
-  page: Page
-) =>
-  pipe(
-    teprint('requesting to record'),
-    TE.chain(() => detectRecordingType(page)),
-    TE.chain((type) =>
-      pipe(
-        inputTimestamp(hhmm)(page),
-        TE.chain(() =>
-          TE.tryCatch(
-            async () => {
-              await page.type(SELECTOR.INPUT_REQUEST_MESSAGE, message, { delay: 200 });
-              await page.select(SELECTOR.SELECT_RECORDING_TYPE, type);
-              await page.click(SELECTOR.BUTTON_REQUEST);
-            },
-            () => new Error(ERROR.TRY_TO_REQUEST_RECORDING)
-          )
-        ),
-        TE.chain<Error, unknown, void>(() => teprint('be checking to see if the request has been success')),
-        TE.chain(() =>
-          TE.tryCatch(
-            () => Promise.race([detectRequestFailure(page), detectTimeCardPage(page)]),
-            (reason) => {
-              if (reason instanceof Error) {
-                return new Error(ERROR.REQUEST_RECORDING(reason.message));
+const requestRecording =
+  (hhmm: string, message: string): RTE.ReaderTaskEither<Page, Error, void> =>
+  (page: Page) =>
+    pipe(
+      teprint('requesting to record'),
+      TE.chain(() => detectRecordingType(page)),
+      TE.chain((type) =>
+        pipe(
+          inputTimestamp(hhmm)(page),
+          TE.chain(() =>
+            TE.tryCatch(
+              async () => {
+                await page.type(SELECTOR.INPUT_REQUEST_MESSAGE, message, { delay: 200 });
+                await page.select(SELECTOR.SELECT_RECORDING_TYPE, type);
+                await page.click(SELECTOR.BUTTON_REQUEST);
+              },
+              () => new Error(ERROR.TRY_TO_REQUEST_RECORDING)
+            )
+          ),
+          TE.chain<Error, unknown, void>(() => teprint('be checking to see if the request has been success')),
+          TE.chain(() =>
+            TE.tryCatch(
+              () => Promise.race([detectRequestFailure(page), detectTimeCardPage(page)]),
+              (reason) => {
+                if (reason instanceof Error) {
+                  return new Error(ERROR.REQUEST_RECORDING(reason.message));
+                }
+                return new Error(ERROR.UNEXPECTED(reason));
               }
-              return new Error(ERROR.UNEXPECTED(reason));
-            }
+            )
           )
         )
       )
-    )
-  );
+    );
 
 const detectRequestFailure = async (page: Page): Promise<void> => {
   try {
