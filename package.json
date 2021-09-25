@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@types/cli-spinner": "0.2.1",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.0.2",
     "@types/luxon": "2.0.4",
     "@types/node": "14.17.18",
     "@types/puppeteer": "5.4.4",
