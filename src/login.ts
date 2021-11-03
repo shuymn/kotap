@@ -1,11 +1,10 @@
-import { pipe } from 'fp-ts/lib/pipeable';
-import * as RTE from 'fp-ts/lib/ReaderTaskEither';
-import * as TE from 'fp-ts/lib/TaskEither';
-import { Page } from 'puppeteer';
-
-import { ERROR, SELECTOR, XPATH } from './constants';
-import { Credential, getCredential } from './setting';
-import { teprint } from './utils';
+import { pipe } from "fp-ts/lib/pipeable";
+import * as RTE from "fp-ts/lib/ReaderTaskEither";
+import * as TE from "fp-ts/lib/TaskEither";
+import { Page } from "puppeteer";
+import { ERROR, SELECTOR, XPATH } from "./constants";
+import { Credential, getCredential } from "./setting";
+import { teprint } from "./utils";
 
 /**
  * Login to King of Time
@@ -17,10 +16,13 @@ export const login =
     pipe(
       getCredential(profile),
       TE.fromIOEither,
-      TE.chain((credential) => pipe(gotoLoginPage(credential)(page), TE.chain(tryToLogin(credential))))
+      TE.chain((credential) =>
+        pipe(gotoLoginPage(credential)(page), TE.chain(tryToLogin(credential)))
+      )
     );
 
-const buildLoginPageUrl = (credential: Credential): string => `https://${credential.type}.kingtime.jp/admin`;
+const buildLoginPageUrl = (credential: Credential): string =>
+  `https://${credential.type}.kingtime.jp/admin`;
 
 const gotoLoginPage =
   (credential: Credential): RTE.ReaderTaskEither<Page, Error, Page> =>
@@ -37,14 +39,16 @@ const gotoLoginPage =
             )
           )
         ),
-      TE.chain<Error, unknown, void>(() => teprint('loading the login page')),
+      TE.chain<Error, unknown, void>(() => teprint("loading the login page")),
       TE.chain(() =>
         TE.tryCatch(
           () =>
             Promise.all(
-              [SELECTOR.FORM_LOGIN_ID, SELECTOR.FORM_LOGIN_PASSWORD, SELECTOR.BUTTON_LOGIN].map((selector) =>
-                page.waitForSelector(selector)
-              )
+              [
+                SELECTOR.FORM_LOGIN_ID,
+                SELECTOR.FORM_LOGIN_PASSWORD,
+                SELECTOR.BUTTON_LOGIN,
+              ].map((selector) => page.waitForSelector(selector))
             ),
           () => new Error(ERROR.LOAD_LOGIN_PAGE)
         )
@@ -75,7 +79,8 @@ const tryToLogin =
           //     -> rejects detectLoginFailure and then throws error
           //   case2. The page transition timed out(Regardless of whether the credentials are correct or not)
           //     -> rejects detectLoginFailure of detectTimeCardPage and then throws error
-          () => Promise.race([detectLoginFailure(page), detectTimeCardPage(page)]),
+          () =>
+            Promise.race([detectLoginFailure(page), detectTimeCardPage(page)]),
           (reason): Error => {
             if (reason instanceof Error) {
               return new Error(ERROR.LOGIN(reason.message));
