@@ -1,16 +1,16 @@
-import os from 'os';
-import path from 'path';
-import rewire from 'rewire';
+import os from "os";
+import path from "path";
+import rewire from "rewire";
 
-import { ENV, PROJECT_NAME } from './constants';
+import { ENV, PROJECT_NAME } from "./constants";
 
-const setting = rewire('./setting');
+const setting = rewire("./setting");
 
-describe('getSettingDir', () => {
-  const getSettingDir = setting.__get__('getSettingDir');
+describe("getSettingDir", () => {
+  const getSettingDir = setting.__get__("getSettingDir");
 
-  test('exported KOTAP_CONFIG_DIR', () => {
-    const env = path.join('foo', 'bar');
+  test("exported KOTAP_CONFIG_DIR", () => {
+    const env = path.join("foo", "bar");
     const expected = env;
 
     const obj = {
@@ -24,8 +24,8 @@ describe('getSettingDir', () => {
     setting.__with__(obj)(() => expect(getSettingDir()).toBe(expected));
   });
 
-  test('exported XDG_CONFIG_HOME', () => {
-    const env = path.join('hoge', 'fuga');
+  test("exported XDG_CONFIG_HOME", () => {
+    const env = path.join("hoge", "fuga");
     const expected = path.join(env, PROJECT_NAME);
 
     const obj = {
@@ -39,7 +39,7 @@ describe('getSettingDir', () => {
     setting.__with__(obj)(() => expect(getSettingDir()).toBe(expected));
   });
 
-  test('home directory', () => {
+  test("home directory", () => {
     const expected = path.join(os.homedir(), `.${PROJECT_NAME}`);
 
     const obj = {

@@ -1,5 +1,5 @@
-import { Spinner } from 'cli-spinner';
-import * as IO from 'fp-ts/lib/IO';
+import { Spinner } from "cli-spinner";
+import * as IO from "fp-ts/lib/IO";
 
 const spinner = new Spinner();
 

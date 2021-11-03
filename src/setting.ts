@@ -1,14 +1,14 @@
-import * as fs from 'fs';
-import os from 'os';
-import path from 'path';
-import * as IO from 'fp-ts/lib/IO';
-import * as IOE from 'fp-ts/lib/IOEither';
-import * as O from 'fp-ts/lib/Option';
-import { pipe } from 'fp-ts/lib/pipeable';
-import stripBom from 'strip-bom';
+import * as fs from "fs";
+import os from "os";
+import path from "path";
+import * as IO from "fp-ts/lib/IO";
+import * as IOE from "fp-ts/lib/IOEither";
+import * as O from "fp-ts/lib/Option";
+import { pipe } from "fp-ts/lib/pipeable";
+import stripBom from "strip-bom";
 
-import { ENV, ERROR, PROJECT_NAME } from './constants';
-import { getenv, NonNullableField } from './utils';
+import { ENV, ERROR, PROJECT_NAME } from "./constants";
+import { getenv, NonNullableField } from "./utils";
 
 interface Settingfile {
   read: <T = Record<string, unknown>>() => IOE.IOEither<Error, T>;
@@ -35,7 +35,7 @@ const settingf = (name: string): IO.IO<Settingfile> =>
         read: () =>
           pipe(
             IOE.tryCatch(
-              () => fs.readFileSync(fullpath, { encoding: 'utf-8' }),
+              () => fs.readFileSync(fullpath, { encoding: "utf-8" }),
               () => new Error(ERROR.NO_CREDENTIALS_FILE(fullpath))
             ),
             IOE.chain((content) =>
@@ -51,7 +51,7 @@ const settingf = (name: string): IO.IO<Settingfile> =>
 
 const SETTING = {
   CREDENTIALS: {
-    NAME: 'credentials.json',
+    NAME: "credentials.json",
   },
 };
 
@@ -62,7 +62,7 @@ export const settingfile = {
 export type Credential = NonNullableField<RawCredential>;
 
 interface RawCredential {
-  type: 's2' | 's3' | undefined;
+  type: "s2" | "s3" | undefined;
   id: string | undefined;
   password: string | undefined;
 }
@@ -71,7 +71,9 @@ interface RawCredentials {
   [profile: string]: RawCredential | undefined;
 }
 
-export const getCredential = (profile: string): IOE.IOEither<Error, Credential> => {
+export const getCredential = (
+  profile: string
+): IOE.IOEither<Error, Credential> => {
   return pipe(
     // TODO JSONファイルのバリデーションをちゃんとやる
     settingfile.credentials().read<RawCredentials>(),
