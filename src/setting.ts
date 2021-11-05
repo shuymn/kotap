@@ -5,8 +5,6 @@ import * as IO from "fp-ts/lib/IO";
 import * as IOE from "fp-ts/lib/IOEither";
 import * as O from "fp-ts/lib/Option";
 import { pipe } from "fp-ts/lib/pipeable";
-import stripBom from "strip-bom";
-
 import { ENV, ERROR, PROJECT_NAME } from "./constants";
 import { getenv, NonNullableField } from "./utils";
 
@@ -40,7 +38,7 @@ const settingf = (name: string): IO.IO<Settingfile> =>
             ),
             IOE.chain((content) =>
               IOE.tryCatch(
-                () => JSON.parse(stripBom(content)),
+                () => JSON.parse(content),
                 () => new Error(ERROR.INVALID_JSON(fullpath))
               )
             )

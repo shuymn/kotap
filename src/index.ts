@@ -36,6 +36,4 @@ cmd
   )
   .action(handle(punch));
 
-cmd.command("help").description("Display help").outputHelp();
-
 cmd.parse(process.argv);

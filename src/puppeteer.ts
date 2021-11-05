@@ -1,13 +1,15 @@
 import { pipe } from "fp-ts/lib/pipeable";
 import * as TE from "fp-ts/lib/TaskEither";
-import { Browser, launch, LaunchOptions, Page, ResourceType } from "puppeteer";
-
+import puppeteer from "puppeteer";
 import { ERROR } from "./constants";
 import { checkOnline, Result, teprint } from "./utils";
 
-export type BrowseFunc = (page: Page) => Result;
+export type BrowseFunc = (page: puppeteer.Page) => Result;
 
-export const browse = (f: BrowseFunc, options?: LaunchOptions): Result =>
+export const browse = (
+  f: BrowseFunc,
+  options?: puppeteer.LaunchOptions
+): Result =>
   TE.bracket(
     launchBrowser(options),
     (browser) => pipe(initializePage(browser), TE.chain(f)),
@@ -15,20 +17,22 @@ export const browse = (f: BrowseFunc, options?: LaunchOptions): Result =>
   );
 
 const launchBrowser = (
-  options?: LaunchOptions
-): TE.TaskEither<Error, Browser> =>
+  options?: puppeteer.LaunchOptions
+): TE.TaskEither<Error, puppeteer.Browser> =>
   pipe(
     teprint("launching the browser"),
     TE.chain(() => checkOnline),
     TE.chain(() =>
       TE.tryCatch(
-        () => launch(options),
+        () => puppeteer.launch(options),
         () => new Error(ERROR.LAUNCH_BROWSER)
       )
     )
   );
 
-const initializePage = (browser: Browser): TE.TaskEither<Error, Page> =>
+const initializePage = (
+  browser: puppeteer.Browser
+): TE.TaskEither<Error, puppeteer.Page> =>
   pipe(
     teprint("initializing the new page"),
     TE.chain(() =>
@@ -37,7 +41,7 @@ const initializePage = (browser: Browser): TE.TaskEither<Error, Page> =>
           const page = await browser.newPage();
           await page.setRequestInterception(true);
           return page.on("request", (request) => {
-            const abortables: ResourceType[] = [
+            const abortables: puppeteer.ResourceType[] = [
               "stylesheet",
               "image",
               "media",
@@ -55,7 +59,7 @@ const initializePage = (browser: Browser): TE.TaskEither<Error, Page> =>
     )
   );
 
-const closeBrowser = (browser: Browser): TE.TaskEither<Error, void> =>
+const closeBrowser = (browser: puppeteer.Browser): TE.TaskEither<Error, void> =>
   pipe(
     teprint("closing the browser"),
     TE.chain(() =>
