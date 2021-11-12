@@ -40,7 +40,7 @@
     "@types/cli-spinner": "0.2.1",
     "@types/jest": "27.0.2",
     "@types/luxon": "2.0.5",
-    "@types/node": "16.11.6",
+    "@types/node": "16.11.7",
     "@types/puppeteer": "5.4.4",
     "@types/rewire": "2.5.28",
     "@typescript-eslint/eslint-plugin": "5.3.0",
