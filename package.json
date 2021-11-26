@@ -50,7 +50,7 @@
     "eslint-plugin-import": "2.25.3",
     "eslint-plugin-prettier": "4.0.0",
     "jest": "27.3.1",
-    "prettier": "2.4.1",
+    "prettier": "2.5.0",
     "rewire": "5.0.0",
     "ts-jest": "27.0.7",
     "ts-node": "10.4.0",
