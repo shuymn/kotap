@@ -14,7 +14,7 @@
     "test": "npm run build-local && jest"
   },
   "engines": {
-    "node": "16.13.1"
+    "node": "16.13.2"
   },
   "bin": {
     "kotap": "./src/index.js"
@@ -57,6 +57,6 @@
     "typescript": "4.5.4"
   },
   "volta": {
-    "node": "16.13.1"
+    "node": "16.13.2"
   }
 }
